@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "2534981E-5698-4B7C-957D-F15638ECC6BF",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:PhotoWall.xcodeproj",
+        "identifier" : "A1000064",
+        "name" : "PhotoWallTests"
+      }
+    }
+  ],
+  "version" : 1
+}

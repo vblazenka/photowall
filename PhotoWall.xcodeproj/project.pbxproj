@@ -1,0 +1,616 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0B242CF22EDED76900F3B5E2 /* ImageCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B242CF12EDED76900F3B5E2 /* ImageCacheService.swift */; };
+		0B242CF42EDED77400F3B5E2 /* ImageCachePropertyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B242CF32EDED77400F3B5E2 /* ImageCachePropertyTests.swift */; };
+		0B242CF72EDEE28400F3B5E2 /* TestGenerators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B242CF62EDEE28400F3B5E2 /* TestGenerators.swift */; };
+		A10000C2 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000C1 /* Theme.swift */; };
+		A10000D2 /* RotationPropertyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000D1 /* RotationPropertyTests.swift */; };
+		A10000A1 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000A2 /* SignInView.swift */; };
+		A10000A3 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000A4 /* MainView.swift */; };
+		A10000A5 /* WallpaperManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000A6 /* WallpaperManager.swift */; };
+		A10000B1 /* AlbumsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000B2 /* AlbumsView.swift */; };
+		A10000B3 /* PhotosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000B4 /* PhotosView.swift */; };
+		A10000B5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000B6 /* SettingsView.swift */; };
+		A1000001 /* PhotoWallApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000002 /* PhotoWallApp.swift */; };
+		A1000003 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000004 /* ContentView.swift */; };
+		A1000005 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1000006 /* Assets.xcassets */; };
+		A1000040 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000041 /* Models.swift */; };
+		A1000044 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000045 /* KeychainService.swift */; };
+		A1000046 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000047 /* AuthManager.swift */; };
+		A1000048 /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000049 /* SettingsManager.swift */; };
+		A1000050 /* KeychainPropertyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000051 /* KeychainPropertyTests.swift */; };
+		A1000052 /* AuthPropertyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000053 /* AuthPropertyTests.swift */; };
+		A1000054 /* SwiftCheck in Frameworks */ = {isa = PBXBuildFile; productRef = A1000055 /* SwiftCheck */; };
+		A1000056 /* SettingsPropertyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000057 /* SettingsPropertyTests.swift */; };
+		A1000080 /* PhotosManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000081 /* PhotosManager.swift */; };
+		A1000090 /* SelectionPropertyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000091 /* SelectionPropertyTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A1000060 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A1000022 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A1000018;
+			remoteInfo = PhotoWall;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0B242CF12EDED76900F3B5E2 /* ImageCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheService.swift; sourceTree = "<group>"; };
+		0B242CF32EDED77400F3B5E2 /* ImageCachePropertyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCachePropertyTests.swift; sourceTree = "<group>"; };
+		0B242CF62EDEE28400F3B5E2 /* TestGenerators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGenerators.swift; sourceTree = "<group>"; };
+		A10000C1 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		A10000D1 /* RotationPropertyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotationPropertyTests.swift; sourceTree = "<group>"; };
+		A1000002 /* PhotoWallApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoWallApp.swift; sourceTree = "<group>"; };
+		A1000004 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A1000006 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A1000007 /* PhotoWall.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoWall.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1000008 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A1000009 /* PhotoWall.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PhotoWall.entitlements; sourceTree = "<group>"; };
+		A1000041 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		A1000045 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
+		A1000047 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		A1000049 /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
+		A1000051 /* KeychainPropertyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainPropertyTests.swift; sourceTree = "<group>"; };
+		A1000053 /* AuthPropertyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPropertyTests.swift; sourceTree = "<group>"; };
+		A1000057 /* SettingsPropertyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPropertyTests.swift; sourceTree = "<group>"; };
+		A1000061 /* PhotoWallTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhotoWallTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1000081 /* PhotosManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosManager.swift; sourceTree = "<group>"; };
+		A1000091 /* SelectionPropertyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionPropertyTests.swift; sourceTree = "<group>"; };
+		A10000A2 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
+		A10000A4 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		A10000A6 /* WallpaperManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallpaperManager.swift; sourceTree = "<group>"; };
+		A10000B2 /* AlbumsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumsView.swift; sourceTree = "<group>"; };
+		A10000B4 /* PhotosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosView.swift; sourceTree = "<group>"; };
+		A10000B6 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A1000010 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1000067 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000054 /* SwiftCheck in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A1000011 = {
+			isa = PBXGroup;
+			children = (
+				A1000012 /* PhotoWall */,
+				A1000062 /* PhotoWallTests */,
+				A1000013 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A1000012 /* PhotoWall */ = {
+			isa = PBXGroup;
+			children = (
+				A1000002 /* PhotoWallApp.swift */,
+				A1000004 /* ContentView.swift */,
+				A1000006 /* Assets.xcassets */,
+				A1000008 /* Info.plist */,
+				A1000009 /* PhotoWall.entitlements */,
+				A1000014 /* Models */,
+				A1000015 /* Services */,
+				A1000016 /* Views */,
+				A1000017 /* Managers */,
+				A10000C0 /* Theme */,
+			);
+			path = PhotoWall;
+			sourceTree = "<group>";
+		};
+		A10000C0 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				A10000C1 /* Theme.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		A1000013 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A1000007 /* PhotoWall.app */,
+				A1000061 /* PhotoWallTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A1000014 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A1000041 /* Models.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A1000015 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				0B242CF12EDED76900F3B5E2 /* ImageCacheService.swift */,
+				A1000045 /* KeychainService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		A1000016 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A10000A2 /* SignInView.swift */,
+				A10000A4 /* MainView.swift */,
+				A10000B2 /* AlbumsView.swift */,
+				A10000B4 /* PhotosView.swift */,
+				A10000B6 /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A1000017 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				A1000047 /* AuthManager.swift */,
+				A1000081 /* PhotosManager.swift */,
+				A1000049 /* SettingsManager.swift */,
+				A10000A6 /* WallpaperManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		A1000062 /* PhotoWallTests */ = {
+			isa = PBXGroup;
+			children = (
+				0B242CF62EDEE28400F3B5E2 /* TestGenerators.swift */,
+				A1000063 /* PropertyTests */,
+			);
+			path = PhotoWallTests;
+			sourceTree = "<group>";
+		};
+		A1000063 /* PropertyTests */ = {
+			isa = PBXGroup;
+			children = (
+				0B242CF32EDED77400F3B5E2 /* ImageCachePropertyTests.swift */,
+				A1000051 /* KeychainPropertyTests.swift */,
+				A1000053 /* AuthPropertyTests.swift */,
+				A1000091 /* SelectionPropertyTests.swift */,
+				A1000057 /* SettingsPropertyTests.swift */,
+				A10000D1 /* RotationPropertyTests.swift */,
+			);
+			path = PropertyTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A1000018 /* PhotoWall */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1000019 /* Build configuration list for PBXNativeTarget "PhotoWall" */;
+			buildPhases = (
+				A1000020 /* Sources */,
+				A1000010 /* Frameworks */,
+				A1000021 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PhotoWall;
+			packageProductDependencies = (
+			);
+			productName = PhotoWall;
+			productReference = A1000007 /* PhotoWall.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A1000064 /* PhotoWallTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1000065 /* Build configuration list for PBXNativeTarget "PhotoWallTests" */;
+			buildPhases = (
+				A1000066 /* Sources */,
+				A1000067 /* Frameworks */,
+				A1000068 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A1000069 /* PBXTargetDependency */,
+			);
+			name = PhotoWallTests;
+			packageProductDependencies = (
+				A1000055 /* SwiftCheck */,
+			);
+			productName = PhotoWallTests;
+			productReference = A1000061 /* PhotoWallTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A1000022 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 2610;
+				TargetAttributes = {
+					A1000018 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = A1000023 /* Build configuration list for PBXProject "PhotoWall" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A1000011;
+			packageReferences = (
+				A1000030 /* XCRemoteSwiftPackageReference "SwiftCheck" */,
+			);
+			productRefGroup = A1000013 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A1000018 /* PhotoWall */,
+				A1000064 /* PhotoWallTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A1000021 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000005 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1000068 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A1000020 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000001 /* PhotoWallApp.swift in Sources */,
+				A1000003 /* ContentView.swift in Sources */,
+				0B242CF22EDED76900F3B5E2 /* ImageCacheService.swift in Sources */,
+				A1000040 /* Models.swift in Sources */,
+				A1000044 /* KeychainService.swift in Sources */,
+				A1000046 /* AuthManager.swift in Sources */,
+				A1000080 /* PhotosManager.swift in Sources */,
+				A1000048 /* SettingsManager.swift in Sources */,
+				A10000A1 /* SignInView.swift in Sources */,
+				A10000A3 /* MainView.swift in Sources */,
+				A10000A5 /* WallpaperManager.swift in Sources */,
+				A10000B1 /* AlbumsView.swift in Sources */,
+				A10000B3 /* PhotosView.swift in Sources */,
+				A10000B5 /* SettingsView.swift in Sources */,
+				A10000C2 /* Theme.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1000066 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000050 /* KeychainPropertyTests.swift in Sources */,
+				A1000052 /* AuthPropertyTests.swift in Sources */,
+				A1000090 /* SelectionPropertyTests.swift in Sources */,
+				A1000056 /* SettingsPropertyTests.swift in Sources */,
+				0B242CF42EDED77400F3B5E2 /* ImageCachePropertyTests.swift in Sources */,
+				0B242CF72EDEE28400F3B5E2 /* TestGenerators.swift in Sources */,
+				A10000D2 /* RotationPropertyTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A1000069 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A1000018 /* PhotoWall */;
+			targetProxy = A1000060 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		A1000024 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A1000025 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		A1000026 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = PhotoWall/PhotoWall.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = PhotoWall/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.photowall.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A1000027 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = PhotoWall/PhotoWall.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = PhotoWall/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.photowall.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		A1000070 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.photowall.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PhotoWall.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PhotoWall";
+			};
+			name = Debug;
+		};
+		A1000071 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.photowall.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PhotoWall.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PhotoWall";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A1000019 /* Build configuration list for PBXNativeTarget "PhotoWall" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1000026 /* Debug */,
+				A1000027 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1000023 /* Build configuration list for PBXProject "PhotoWall" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1000024 /* Debug */,
+				A1000025 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1000065 /* Build configuration list for PBXNativeTarget "PhotoWallTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1000070 /* Debug */,
+				A1000071 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A1000030 /* XCRemoteSwiftPackageReference "SwiftCheck" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/typelift/SwiftCheck.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.12.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A1000055 /* SwiftCheck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A1000030 /* XCRemoteSwiftPackageReference "SwiftCheck" */;
+			productName = SwiftCheck;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = A1000022 /* Project object */;
+}
