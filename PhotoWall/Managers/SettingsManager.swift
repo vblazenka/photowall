@@ -21,6 +21,7 @@ final class SettingsManager: SettingsManagerProtocol {
         static let selectedAlbumIds = "com.photowall.selectedAlbumIds"
         static let selectedPhotoIds = "com.photowall.selectedPhotoIds"
         static let isPaused = "com.photowall.isPaused"
+        static let pickerCache = "com.photowall.pickerCache"
     }
     
     // MARK: - Default Values
@@ -58,17 +59,37 @@ final class SettingsManager: SettingsManagerProtocol {
             userDefaults.set(isPaused, forKey: Keys.isPaused)
         }
     }
-    
+
+    @Published var pickerCache: PickerCache? {
+        didSet {
+            if let cache = pickerCache {
+                if let encoded = try? JSONEncoder().encode(cache) {
+                    userDefaults.set(encoded, forKey: Keys.pickerCache)
+                }
+            } else {
+                userDefaults.removeObject(forKey: Keys.pickerCache)
+            }
+        }
+    }
+
     // MARK: - Initialization
     
     init(userDefaults: UserDefaults = .standard) {
         self.userDefaults = userDefaults
-        
+
         // Load persisted values or use defaults
         self.rotationInterval = userDefaults.object(forKey: Keys.rotationInterval) as? TimeInterval ?? Defaults.rotationInterval
         self.selectedAlbumIds = userDefaults.stringArray(forKey: Keys.selectedAlbumIds) ?? []
         self.selectedPhotoIds = userDefaults.stringArray(forKey: Keys.selectedPhotoIds) ?? []
         self.isPaused = userDefaults.bool(forKey: Keys.isPaused)
+
+        // Load picker cache if available
+        if let data = userDefaults.data(forKey: Keys.pickerCache),
+           let cache = try? JSONDecoder().decode(PickerCache.self, from: data) {
+            self.pickerCache = cache
+        } else {
+            self.pickerCache = nil
+        }
     }
     
     // MARK: - Convenience Methods
@@ -178,5 +199,29 @@ final class SettingsManager: SettingsManagerProtocol {
     /// Returns the count of selected photos
     var selectedPhotoCount: Int {
         selectedPhotoIds.count
+    }
+
+    // MARK: - Picker Cache Methods
+
+    /// Caches selected photos from the picker
+    /// - Parameter photos: The photos selected via picker
+    func cacheSelectedPhotos(_ photos: [Photo]) {
+        pickerCache = PickerCache(photos: photos, selectionDate: Date())
+        selectedPhotoIds = photos.map { $0.id }
+    }
+
+    /// Retrieves cached photos if they're not stale
+    /// - Returns: Cached photos, or nil if cache is stale or empty
+    func getCachedPhotos() -> [Photo]? {
+        guard let cache = pickerCache, !cache.isStale else {
+            return nil
+        }
+        return cache.photos
+    }
+
+    /// Clears the picker cache
+    func clearPickerCache() {
+        pickerCache = nil
+        selectedPhotoIds = []
     }
 }

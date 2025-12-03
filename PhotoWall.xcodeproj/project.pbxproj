@@ -10,14 +10,10 @@
 		0B242CF22EDED76900F3B5E2 /* ImageCacheService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B242CF12EDED76900F3B5E2 /* ImageCacheService.swift */; };
 		0B242CF42EDED77400F3B5E2 /* ImageCachePropertyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B242CF32EDED77400F3B5E2 /* ImageCachePropertyTests.swift */; };
 		0B242CF72EDEE28400F3B5E2 /* TestGenerators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B242CF62EDEE28400F3B5E2 /* TestGenerators.swift */; };
-		A10000C2 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000C1 /* Theme.swift */; };
-		A10000D2 /* RotationPropertyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000D1 /* RotationPropertyTests.swift */; };
-		A10000A1 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000A2 /* SignInView.swift */; };
-		A10000A3 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000A4 /* MainView.swift */; };
-		A10000A5 /* WallpaperManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000A6 /* WallpaperManager.swift */; };
-		A10000B1 /* AlbumsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000B2 /* AlbumsView.swift */; };
-		A10000B3 /* PhotosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000B4 /* PhotosView.swift */; };
-		A10000B5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000B6 /* SettingsView.swift */; };
+		0B8907602EE008380030DF4D /* PhotosPickerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B89075F2EE008380030DF4D /* PhotosPickerService.swift */; };
+		0B8907622EE008880030DF4D /* PickerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8907612EE008880030DF4D /* PickerModels.swift */; };
+		0B8907642EE008980030DF4D /* PickerSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8907632EE008980030DF4D /* PickerSheetView.swift */; };
+		0B8907662EE008A00030DF4D /* PickerWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8907652EE008A00030DF4D /* PickerWebView.swift */; };
 		A1000001 /* PhotoWallApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000002 /* PhotoWallApp.swift */; };
 		A1000003 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000004 /* ContentView.swift */; };
 		A1000005 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1000006 /* Assets.xcassets */; };
@@ -31,6 +27,13 @@
 		A1000056 /* SettingsPropertyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000057 /* SettingsPropertyTests.swift */; };
 		A1000080 /* PhotosManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000081 /* PhotosManager.swift */; };
 		A1000090 /* SelectionPropertyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000091 /* SelectionPropertyTests.swift */; };
+		A10000A1 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000A2 /* SignInView.swift */; };
+		A10000A3 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000A4 /* MainView.swift */; };
+		A10000A5 /* WallpaperManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000A6 /* WallpaperManager.swift */; };
+		A10000B1 /* AlbumsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000B2 /* AlbumsView.swift */; };
+		A10000B5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000B6 /* SettingsView.swift */; };
+		A10000C2 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000C1 /* Theme.swift */; };
+		A10000D2 /* RotationPropertyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000D1 /* RotationPropertyTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,8 +50,10 @@
 		0B242CF12EDED76900F3B5E2 /* ImageCacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheService.swift; sourceTree = "<group>"; };
 		0B242CF32EDED77400F3B5E2 /* ImageCachePropertyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCachePropertyTests.swift; sourceTree = "<group>"; };
 		0B242CF62EDEE28400F3B5E2 /* TestGenerators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGenerators.swift; sourceTree = "<group>"; };
-		A10000C1 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
-		A10000D1 /* RotationPropertyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotationPropertyTests.swift; sourceTree = "<group>"; };
+		0B89075F2EE008380030DF4D /* PhotosPickerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosPickerService.swift; sourceTree = "<group>"; };
+		0B8907612EE008880030DF4D /* PickerModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerModels.swift; sourceTree = "<group>"; };
+		0B8907632EE008980030DF4D /* PickerSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerSheetView.swift; sourceTree = "<group>"; };
+		0B8907652EE008A00030DF4D /* PickerWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerWebView.swift; sourceTree = "<group>"; };
 		A1000002 /* PhotoWallApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoWallApp.swift; sourceTree = "<group>"; };
 		A1000004 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A1000006 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -69,8 +74,9 @@
 		A10000A4 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		A10000A6 /* WallpaperManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallpaperManager.swift; sourceTree = "<group>"; };
 		A10000B2 /* AlbumsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumsView.swift; sourceTree = "<group>"; };
-		A10000B4 /* PhotosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosView.swift; sourceTree = "<group>"; };
 		A10000B6 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		A10000C1 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		A10000D1 /* RotationPropertyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotationPropertyTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,7 +111,6 @@
 			isa = PBXGroup;
 			children = (
 				A1000002 /* PhotoWallApp.swift */,
-				A1000004 /* ContentView.swift */,
 				A1000006 /* Assets.xcassets */,
 				A1000008 /* Info.plist */,
 				A1000009 /* PhotoWall.entitlements */,
@@ -116,14 +121,6 @@
 				A10000C0 /* Theme */,
 			);
 			path = PhotoWall;
-			sourceTree = "<group>";
-		};
-		A10000C0 /* Theme */ = {
-			isa = PBXGroup;
-			children = (
-				A10000C1 /* Theme.swift */,
-			);
-			path = Theme;
 			sourceTree = "<group>";
 		};
 		A1000013 /* Products */ = {
@@ -138,6 +135,7 @@
 		A1000014 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				0B8907612EE008880030DF4D /* PickerModels.swift */,
 				A1000041 /* Models.swift */,
 			);
 			path = Models;
@@ -146,6 +144,7 @@
 		A1000015 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				0B89075F2EE008380030DF4D /* PhotosPickerService.swift */,
 				0B242CF12EDED76900F3B5E2 /* ImageCacheService.swift */,
 				A1000045 /* KeychainService.swift */,
 			);
@@ -155,10 +154,12 @@
 		A1000016 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				0B8907652EE008A00030DF4D /* PickerWebView.swift */,
+				0B8907632EE008980030DF4D /* PickerSheetView.swift */,
+				A1000004 /* ContentView.swift */,
 				A10000A2 /* SignInView.swift */,
 				A10000A4 /* MainView.swift */,
 				A10000B2 /* AlbumsView.swift */,
-				A10000B4 /* PhotosView.swift */,
 				A10000B6 /* SettingsView.swift */,
 			);
 			path = Views;
@@ -195,6 +196,14 @@
 				A10000D1 /* RotationPropertyTests.swift */,
 			);
 			path = PropertyTests;
+			sourceTree = "<group>";
+		};
+		A10000C0 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				A10000C1 /* Theme.swift */,
+			);
+			path = Theme;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -301,10 +310,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1000001 /* PhotoWallApp.swift in Sources */,
+				0B8907622EE008880030DF4D /* PickerModels.swift in Sources */,
 				A1000003 /* ContentView.swift in Sources */,
 				0B242CF22EDED76900F3B5E2 /* ImageCacheService.swift in Sources */,
 				A1000040 /* Models.swift in Sources */,
 				A1000044 /* KeychainService.swift in Sources */,
+				0B8907642EE008980030DF4D /* PickerSheetView.swift in Sources */,
 				A1000046 /* AuthManager.swift in Sources */,
 				A1000080 /* PhotosManager.swift in Sources */,
 				A1000048 /* SettingsManager.swift in Sources */,
@@ -312,7 +323,8 @@
 				A10000A3 /* MainView.swift in Sources */,
 				A10000A5 /* WallpaperManager.swift in Sources */,
 				A10000B1 /* AlbumsView.swift in Sources */,
-				A10000B3 /* PhotosView.swift in Sources */,
+				0B8907662EE008A00030DF4D /* PickerWebView.swift in Sources */,
+				0B8907602EE008380030DF4D /* PhotosPickerService.swift in Sources */,
 				A10000B5 /* SettingsView.swift in Sources */,
 				A10000C2 /* Theme.swift in Sources */,
 			);

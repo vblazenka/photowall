@@ -30,5 +30,23 @@
 	<string>Copyright © 2024. All rights reserved.</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.photowall.oauth</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.photowall.app</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

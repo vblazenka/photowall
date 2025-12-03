@@ -28,247 +28,61 @@ enum PhotosError: Error, LocalizedError {
     }
 }
 
-// MARK: - Google Photos API Response Models
-
-struct AlbumsResponse: Codable {
-    let albums: [AlbumResponse]?
-    let nextPageToken: String?
-}
-
-struct AlbumResponse: Codable {
-    let id: String
-    let title: String?
-    let productUrl: String?
-    let coverPhotoBaseUrl: String?
-    let coverPhotoMediaItemId: String?
-    let mediaItemsCount: String?
-    
-    func toAlbum() -> Album {
-        Album(
-            id: id,
-            title: title ?? "Untitled Album",
-            coverPhotoBaseUrl: coverPhotoBaseUrl,
-            mediaItemsCount: mediaItemsCount.flatMap { Int($0) },
-            productUrl: productUrl
-        )
-    }
-}
-
-struct MediaItemsResponse: Codable {
-    let mediaItems: [MediaItemResponse]?
-    let nextPageToken: String?
-}
-
-
-struct MediaItemResponse: Codable {
-    let id: String
-    let baseUrl: String?
-    let filename: String?
-    let mimeType: String?
-    let mediaMetadata: MediaMetadataResponse?
-    let productUrl: String?
-    
-    func toPhoto() -> Photo? {
-        guard let baseUrl = baseUrl else { return nil }
-        return Photo(
-            id: id,
-            baseUrl: baseUrl,
-            filename: filename ?? "unknown",
-            mimeType: mimeType ?? "image/jpeg",
-            mediaMetadata: mediaMetadata?.toMediaMetadata()
-        )
-    }
-}
-
-struct MediaMetadataResponse: Codable {
-    let width: String?
-    let height: String?
-    let creationTime: String?
-    let photo: PhotoMetadataResponse?
-    let video: VideoMetadataResponse?
-    
-    func toMediaMetadata() -> MediaMetadata {
-        MediaMetadata(
-            width: width,
-            height: height,
-            creationTime: creationTime
-        )
-    }
-}
-
-struct PhotoMetadataResponse: Codable {
-    let cameraMake: String?
-    let cameraModel: String?
-    let focalLength: Double?
-    let apertureFNumber: Double?
-    let isoEquivalent: Int?
-}
-
-struct VideoMetadataResponse: Codable {
-    let cameraMake: String?
-    let cameraModel: String?
-    let fps: Double?
-    let status: String?
-}
-
-struct SearchMediaItemsRequest: Codable {
-    let albumId: String
-    let pageSize: Int
-    let pageToken: String?
-}
-
 // MARK: - PhotosManagerProtocol
 
 protocol PhotosManagerProtocol {
-    func fetchAlbums() async throws -> [Album]
-    func fetchPhotos(albumId: String) async throws -> [Photo]
+    func createPickerSession(maxItemCount: Int?) async throws -> PickerSessionResponse
+    func getPickerSession(sessionId: String) async throws -> PickerSessionResponse
+    func fetchPhotosFromPicker(sessionId: String) async throws -> [Photo]
     func downloadPhoto(photo: Photo, quality: PhotoQuality) async throws -> Data
 }
 
 // MARK: - PhotosManager
 
 final class PhotosManager: PhotosManagerProtocol, ObservableObject {
-    
+
     // MARK: - Constants
-    
+
     private enum Constants {
-        static let baseURL = "https://photoslibrary.googleapis.com/v1"
-        static let albumsEndpoint = "/albums"
-        static let mediaItemsSearchEndpoint = "/mediaItems:search"
-        static let defaultPageSize = 50
         static let maxRetries = 3
         static let retryDelay: TimeInterval = 1.0
     }
-    
+
     // MARK: - Properties
-    
+
     private let authManager: any AuthManagerProtocol
+    private let pickerService: PhotosPickerServiceProtocol
     private let urlSession: URLSession
     private let imageCacheService: ImageCacheServiceProtocol
-    
+
     // MARK: - Initialization
-    
+
     init(
         authManager: any AuthManagerProtocol,
+        pickerService: PhotosPickerServiceProtocol,
         urlSession: URLSession = .shared,
         imageCacheService: ImageCacheServiceProtocol = ImageCacheService()
     ) {
         self.authManager = authManager
+        self.pickerService = pickerService
         self.urlSession = urlSession
         self.imageCacheService = imageCacheService
     }
     
-    // MARK: - Fetch Albums
-    
-    func fetchAlbums() async throws -> [Album] {
-        var allAlbums: [Album] = []
-        var nextPageToken: String? = nil
-        
-        repeat {
-            let (albums, token) = try await fetchAlbumsPage(pageToken: nextPageToken)
-            allAlbums.append(contentsOf: albums)
-            nextPageToken = token
-        } while nextPageToken != nil
-        
-        return allAlbums
-    }
-    
-    private func fetchAlbumsPage(pageToken: String?) async throws -> ([Album], String?) {
-        let accessToken = try await getAccessToken()
-        
-        var components = URLComponents(string: Constants.baseURL + Constants.albumsEndpoint)!
-        var queryItems = [URLQueryItem(name: "pageSize", value: String(Constants.defaultPageSize))]
-        if let pageToken = pageToken {
-            queryItems.append(URLQueryItem(name: "pageToken", value: pageToken))
-        }
-        components.queryItems = queryItems
-        
-        guard let url = components.url else {
-            throw PhotosError.invalidResponse
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Accept")
+    // MARK: - Picker Integration
 
-        // Debug logging
-        print("=== Albums API Request ===")
-        print("URL: \(url)")
-        print("Access Token (first 20 chars): \(String(accessToken.prefix(20)))...")
-        print("Headers: \(request.allHTTPHeaderFields ?? [:])")
-
-        let (data, response) = try await performRequest(request)
-
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw PhotosError.invalidResponse
-        }
-
-        // Debug logging for response
-        print("=== Albums API Response ===")
-        print("Status Code: \(httpResponse.statusCode)")
-        if httpResponse.statusCode != 200 {
-            print("Error Response Body: \(String(data: data, encoding: .utf8) ?? "Unable to decode")")
-        }
-
-        try handleHTTPResponse(httpResponse, data: data)
-
-        let albumsResponse = try JSONDecoder().decode(AlbumsResponse.self, from: data)
-        let albums = albumsResponse.albums?.map { $0.toAlbum() } ?? []
-        
-        return (albums, albumsResponse.nextPageToken)
+    func createPickerSession(maxItemCount: Int? = nil) async throws -> PickerSessionResponse {
+        return try await pickerService.createPickerSession(maxItemCount: maxItemCount)
     }
 
-    
-    // MARK: - Fetch Photos
-    
-    func fetchPhotos(albumId: String) async throws -> [Photo] {
-        var allPhotos: [Photo] = []
-        var nextPageToken: String? = nil
-        
-        repeat {
-            let (photos, token) = try await fetchPhotosPage(albumId: albumId, pageToken: nextPageToken)
-            allPhotos.append(contentsOf: photos)
-            nextPageToken = token
-        } while nextPageToken != nil
-        
-        return allPhotos
+    func getPickerSession(sessionId: String) async throws -> PickerSessionResponse {
+        return try await pickerService.getSession(sessionId: sessionId)
     }
-    
-    private func fetchPhotosPage(albumId: String, pageToken: String?) async throws -> ([Photo], String?) {
-        let accessToken = try await getAccessToken()
-        
-        guard let url = URL(string: Constants.baseURL + Constants.mediaItemsSearchEndpoint) else {
-            throw PhotosError.invalidResponse
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("application/json", forHTTPHeaderField: "Accept")
-        
-        let searchRequest = SearchMediaItemsRequest(
-            albumId: albumId,
-            pageSize: Constants.defaultPageSize,
-            pageToken: pageToken
-        )
-        request.httpBody = try JSONEncoder().encode(searchRequest)
-        
-        let (data, response) = try await performRequest(request)
-        
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw PhotosError.invalidResponse
-        }
-        
-        try handleHTTPResponse(httpResponse, data: data)
-        
-        let mediaItemsResponse = try JSONDecoder().decode(MediaItemsResponse.self, from: data)
-        let photos = mediaItemsResponse.mediaItems?.compactMap { $0.toPhoto() } ?? []
-        
-        return (photos, mediaItemsResponse.nextPageToken)
+
+    func fetchPhotosFromPicker(sessionId: String) async throws -> [Photo] {
+        return try await pickerService.fetchMediaItems(sessionId: sessionId)
     }
-    
+
     // MARK: - Download Photo
     
     func downloadPhoto(photo: Photo, quality: PhotoQuality) async throws -> Data {
@@ -278,7 +92,7 @@ final class PhotosManager: PhotosManagerProtocol, ObservableObject {
                 return data
             }
         }
-        
+
         let imageURL: String
         switch quality {
         case .thumbnail:
@@ -286,29 +100,41 @@ final class PhotosManager: PhotosManagerProtocol, ObservableObject {
         case .fullResolution:
             imageURL = photo.fullResolutionUrl
         }
-        
+
         guard let url = URL(string: imageURL) else {
             throw PhotosError.downloadFailed("Invalid image URL")
         }
-        
+
+        // Get access token for authenticated download (required by Picker API)
+        let accessToken = try await getAccessToken()
+
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+
+        print("=== Downloading Photo ===")
+        print("URL: \(url.absoluteString)")
+
         let (data, response) = try await performRequest(request)
-        
+
         guard let httpResponse = response as? HTTPURLResponse else {
             throw PhotosError.invalidResponse
         }
-        
+
+        print("Download Response Status: \(httpResponse.statusCode)")
+
         guard httpResponse.statusCode == 200 else {
+            print("Download failed with status \(httpResponse.statusCode)")
             throw PhotosError.downloadFailed("HTTP \(httpResponse.statusCode)")
         }
-        
+
+        print("Successfully downloaded \(data.count) bytes")
+
         // Cache full resolution images
         if quality == .fullResolution {
             _ = try? imageCacheService.cacheImage(for: photo, data: data)
         }
-        
+
         return data
     }
     

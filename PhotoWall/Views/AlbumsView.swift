@@ -1,282 +1,175 @@
 import SwiftUI
 
-/// View displaying user's Google Photos albums in a grid layout
-/// Requirements: 2.1, 6.2, 6.3, 6.4
+/// View for selecting photos via Google Photos Picker
 struct AlbumsView: View {
     @ObservedObject var photosManager: PhotosManager
     @ObservedObject var settingsManager: SettingsManager
-    
-    let onAlbumSelected: (Album) -> Void
-    
-    @State private var albums: [Album] = []
-    @State private var isLoading = false
-    @State private var errorMessage: String? = nil
-    @State private var hasAppeared = false
-    
+
+    @State private var showingPicker = false
+    @State private var errorMessage: String?
+
     var body: some View {
-        Group {
-            if isLoading && albums.isEmpty {
-                loadingView
-                    .transition(.opacity)
-            } else if let error = errorMessage, albums.isEmpty {
-                errorView(error)
-                    .transition(.opacity)
-            } else if albums.isEmpty {
-                emptyView
-                    .transition(.opacity)
+        VStack(spacing: Theme.Spacing.lg) {
+            // Header
+            VStack(spacing: Theme.Spacing.sm) {
+                Image(systemName: "photo.on.rectangle.angled")
+                    .font(.system(size: 48))
+                    .foregroundColor(Theme.selection)
+                    .symbolRenderingMode(.hierarchical)
+
+                Text("Photo Selection")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .foregroundColor(Theme.primaryText)
+            }
+            .padding(.top, Theme.Spacing.xl)
+
+            // Selection Status
+            if let cache = settingsManager.pickerCache {
+                selectedPhotosView(cache: cache)
             } else {
-                albumsGrid
-                    .transition(.opacity)
+                noPhotosSelectedView
+            }
+
+            Spacer()
+
+            // Error message
+            if let errorMessage = errorMessage {
+                Text(errorMessage)
+                    .font(.caption)
+                    .foregroundColor(Theme.warning)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Theme.background)
-        .animation(Theme.Animation.standard, value: isLoading)
-        .animation(Theme.Animation.standard, value: albums.isEmpty)
-        .task {
-            await loadAlbums()
-        }
-    }
-    
-    // MARK: - Loading View
-    
-    private var loadingView: some View {
-        VStack(spacing: Theme.Spacing.md) {
-            AnimatedProgressView()
-            Text("Loading albums...")
-                .font(.caption)
-                .foregroundColor(Theme.secondaryText)
-        }
-    }
-    
-    // MARK: - Error View
-    
-    private func errorView(_ message: String) -> some View {
-        VStack(spacing: Theme.Spacing.md) {
-            Image(systemName: "exclamationmark.triangle.fill")
-                .font(.system(size: 32))
-                .foregroundColor(Theme.warning)
-                .symbolRenderingMode(.hierarchical)
-            
-            Text("Failed to load albums")
-                .font(.subheadline)
-                .fontWeight(.medium)
-                .foregroundColor(Theme.primaryText)
-            
-            Text(message)
-                .font(.caption)
-                .foregroundColor(Theme.secondaryText)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
-            
-            Button(action: {
-                Task { await loadAlbums() }
-            }) {
-                Label("Retry", systemImage: "arrow.clockwise")
-            }
-            .buttonStyle(.bordered)
-        }
-    }
-    
-    // MARK: - Empty View
-    
-    private var emptyView: some View {
-        VStack(spacing: Theme.Spacing.md) {
-            Image(systemName: "photo.stack.fill")
-                .font(.system(size: 32))
-                .foregroundColor(Theme.secondaryText)
-                .symbolRenderingMode(.hierarchical)
-            
-            Text("No albums found")
-                .font(.subheadline)
-                .foregroundColor(Theme.secondaryText)
-            
-            Button(action: {
-                Task { await loadAlbums() }
-            }) {
-                Label("Refresh", systemImage: "arrow.clockwise")
-            }
-            .buttonStyle(.bordered)
-        }
-    }
-    
-    // MARK: - Albums Grid
-    
-    private var albumsGrid: some View {
-        ScrollView {
-            LazyVGrid(
-                columns: [
-                    GridItem(.flexible(), spacing: Theme.Spacing.md),
-                    GridItem(.flexible(), spacing: Theme.Spacing.md)
-                ],
-                spacing: Theme.Spacing.md
-            ) {
-                ForEach(Array(albums.enumerated()), id: \.element.id) { index, album in
-                    AlbumCell(
-                        album: album,
-                        isSelected: settingsManager.isAlbumSelected(album),
-                        onTap: { onAlbumSelected(album) }
-                    )
-                    .fadeIn()
-                    .animation(
-                        Theme.Animation.spring.delay(Double(index) * 0.03),
-                        value: hasAppeared
-                    )
+        .sheet(isPresented: $showingPicker) {
+            PickerSheetView(
+                photosManager: photosManager,
+                onComplete: handlePhotosSelected,
+                onCancel: {
+                    showingPicker = false
                 }
-            }
-            .padding(Theme.Spacing.md)
-        }
-        .refreshable {
-            await loadAlbums()
-        }
-        .onAppear {
-            withAnimation {
-                hasAppeared = true
-            }
+            )
         }
     }
-    
-    // MARK: - Data Loading
-    
-    private func loadAlbums() async {
-        isLoading = true
-        errorMessage = nil
-        
-        do {
-            let fetchedAlbums = try await photosManager.fetchAlbums()
-            await MainActor.run {
-                albums = fetchedAlbums
-                isLoading = false
+
+    // MARK: - No Photos Selected View
+
+    private var noPhotosSelectedView: some View {
+        VStack(spacing: Theme.Spacing.md) {
+            Text("No photos selected")
+                .font(.subheadline)
+                .foregroundColor(Theme.secondaryText)
+
+            Text("Select photos from your Google Photos library to use for wallpaper rotation.")
+                .font(.caption)
+                .foregroundColor(Theme.tertiaryText)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, Theme.Spacing.xl)
+
+            Button(action: {
+                errorMessage = nil
+                showingPicker = true
+            }) {
+                Label("Select Photos from Google Photos", systemImage: "photo.on.rectangle.angled")
+                    .padding(.horizontal, Theme.Spacing.md)
+                    .padding(.vertical, Theme.Spacing.sm)
             }
-        } catch {
-            await MainActor.run {
-                errorMessage = error.localizedDescription
-                isLoading = false
+            .buttonStyle(.borderedProminent)
+            .controlSize(.large)
+        }
+        .padding(Theme.Spacing.xl)
+    }
+
+    // MARK: - Selected Photos View
+
+    private func selectedPhotosView(cache: PickerCache) -> some View {
+        VStack(spacing: Theme.Spacing.md) {
+            // Photo count
+            VStack(spacing: Theme.Spacing.xs) {
+                Text("\(cache.photos.count)")
+                    .font(.system(size: 48, weight: .bold, design: .rounded))
+                    .foregroundColor(Theme.selection)
+
+                Text(cache.photos.count == 1 ? "photo selected" : "photos selected")
+                    .font(.subheadline)
+                    .foregroundColor(Theme.secondaryText)
+            }
+
+            // Selection date
+            Text("Selected on \(formatDate(cache.selectionDate))")
+                .font(.caption)
+                .foregroundColor(Theme.tertiaryText)
+
+            // Staleness warning
+            if cache.isStale {
+                HStack(spacing: Theme.Spacing.xs) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                    Text("Selection is over 7 days old - consider re-selecting")
+                }
+                .font(.caption)
+                .foregroundColor(Theme.warning)
+                .padding(Theme.Spacing.sm)
+                .background(Theme.warning.opacity(0.1))
+                .cornerRadius(Theme.CornerRadius.small)
+            }
+
+            // Action buttons
+            HStack(spacing: Theme.Spacing.md) {
+                Button(action: {
+                    errorMessage = nil
+                    showingPicker = true
+                }) {
+                    Label("Select Different Photos", systemImage: "arrow.triangle.2.circlepath")
+                        .padding(.horizontal, Theme.Spacing.sm)
+                }
+                .buttonStyle(.bordered)
+
+                Button(action: {
+                    settingsManager.clearPickerCache()
+                }) {
+                    Label("Clear Selection", systemImage: "trash")
+                        .padding(.horizontal, Theme.Spacing.sm)
+                }
+                .buttonStyle(.bordered)
+                .tint(.red)
             }
         }
+        .padding(Theme.Spacing.xl)
+    }
+
+    // MARK: - Actions
+
+    private func handlePhotosSelected(_ photos: [Photo]) {
+        showingPicker = false
+
+        // Cache the selected photos
+        settingsManager.cacheSelectedPhotos(photos)
+
+        // Show success feedback
+        errorMessage = nil
+    }
+
+    // MARK: - Helpers
+
+    private func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter.string(from: date)
     }
 }
 
-// MARK: - Album Cell
+// MARK: - Preview
 
-struct AlbumCell: View {
-    let album: Album
-    let isSelected: Bool
-    let onTap: () -> Void
-    
-    @State private var coverImage: NSImage? = nil
-    @State private var isLoadingImage = false
-    @State private var isHovered = false
-    
-    var body: some View {
-        Button(action: onTap) {
-            VStack(alignment: .leading, spacing: Theme.Spacing.sm) {
-                // Cover image
-                ZStack {
-                    RoundedRectangle(cornerRadius: Theme.CornerRadius.medium)
-                        .fill(Theme.placeholder)
-                    
-                    if let image = coverImage {
-                        Image(nsImage: image)
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(height: 100)
-                            .clipped()
-                            .cornerRadius(Theme.CornerRadius.medium)
-                            .transition(.opacity.combined(with: .scale(scale: 0.95)))
-                    } else if isLoadingImage {
-                        LoadingPlaceholder(cornerRadius: Theme.CornerRadius.medium)
-                    } else {
-                        Image(systemName: "photo.on.rectangle.angled")
-                            .font(.system(size: 24))
-                            .foregroundColor(Theme.tertiaryText)
-                            .symbolRenderingMode(.hierarchical)
-                    }
-                    
-                    // Selection indicator
-                    if isSelected {
-                        VStack {
-                            HStack {
-                                Spacer()
-                                Image(systemName: "checkmark.circle.fill")
-                                    .font(.system(size: 18))
-                                    .foregroundColor(Theme.selection)
-                                    .background(
-                                        Circle()
-                                            .fill(Color.white)
-                                            .padding(2)
-                                    )
-                                    .padding(Theme.Spacing.sm)
-                            }
-                            Spacer()
-                        }
-                        .transition(.scale.combined(with: .opacity))
-                    }
-                    
-                    // Hover overlay
-                    if isHovered && !isSelected {
-                        RoundedRectangle(cornerRadius: Theme.CornerRadius.medium)
-                            .fill(Color.white.opacity(0.1))
-                    }
-                }
-                .frame(height: 100)
-                .overlay(
-                    RoundedRectangle(cornerRadius: Theme.CornerRadius.medium)
-                        .stroke(isSelected ? Theme.selection : Color.clear, lineWidth: 2)
-                )
-                .animation(Theme.Animation.spring, value: isSelected)
-                .animation(Theme.Animation.standard, value: isHovered)
-                
-                // Album info
-                VStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
-                    Text(album.title)
-                        .font(.caption)
-                        .fontWeight(.medium)
-                        .foregroundColor(Theme.primaryText)
-                        .lineLimit(1)
-                        .truncationMode(.tail)
-                    
-                    if let count = album.mediaItemsCount {
-                        Text("\(count) photos")
-                            .font(.caption2)
-                            .foregroundColor(Theme.secondaryText)
-                    }
-                }
-            }
-        }
-        .buttonStyle(.plain)
-        .scaleEffect(isHovered ? 1.02 : 1.0)
-        .animation(Theme.Animation.spring, value: isHovered)
-        .onHover { hovering in
-            isHovered = hovering
-        }
-        .task {
-            await loadCoverImage()
-        }
-    }
-    
-    private func loadCoverImage() async {
-        guard let urlString = album.coverPhotoBaseUrl,
-              let url = URL(string: "\(urlString)=w200-h200-c") else {
-            return
-        }
-        
-        isLoadingImage = true
-        
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            if let image = NSImage(data: data) {
-                await MainActor.run {
-                    withAnimation(Theme.Animation.standard) {
-                        coverImage = image
-                        isLoadingImage = false
-                    }
-                }
-            }
-        } catch {
-            await MainActor.run {
-                isLoadingImage = false
-            }
-        }
-    }
+#Preview {
+    AlbumsView(
+        photosManager: PhotosManager(
+            authManager: AuthManager(),
+            pickerService: PhotosPickerService(authManager: AuthManager())
+        ),
+        settingsManager: SettingsManager()
+    )
 }

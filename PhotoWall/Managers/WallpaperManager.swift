@@ -137,11 +137,18 @@ final class WallpaperManager: WallpaperManagerProtocol {
     ///   - photos: Array of photos to rotate through
     ///   - interval: Time interval between wallpaper changes in seconds
     func startRotation(photos: [Photo], interval: TimeInterval) {
-        guard !photos.isEmpty else { return }
-        
+        print("=== WallpaperManager: Starting rotation ===")
+        print("Photos count: \(photos.count)")
+        print("Interval: \(interval) seconds")
+
+        guard !photos.isEmpty else {
+            print("ERROR: No photos to rotate")
+            return
+        }
+
         // Stop any existing rotation
         stopRotationTimer()
-        
+
         // Initialize rotation state
         rotationState = RotationState(
             isActive: true,
@@ -151,15 +158,18 @@ final class WallpaperManager: WallpaperManagerProtocol {
             interval: interval,
             lastRotationTime: Date()
         )
-        
+
         isRotating = true
         isPaused = false
-        
+
+        print("First photo: \(photos[0].filename)")
+        print("First photo baseUrl: \(photos[0].baseUrl)")
+
         // Set the first wallpaper immediately
         Task {
             await setCurrentWallpaper()
         }
-        
+
         // Start the rotation timer
         startRotationTimer(interval: interval)
     }
@@ -234,13 +244,24 @@ final class WallpaperManager: WallpaperManagerProtocol {
     }
     
     private func setCurrentWallpaper() async {
-        guard let photo = rotationState.currentPhoto else { return }
-        
+        print("=== WallpaperManager: setCurrentWallpaper called ===")
+
+        guard let photo = rotationState.currentPhoto else {
+            print("ERROR: No current photo in rotation state")
+            return
+        }
+
+        print("Setting wallpaper to: \(photo.filename)")
+
         do {
             try await setWallpaper(photo: photo)
+            print("SUCCESS: Wallpaper set successfully")
         } catch {
             // Log error but continue rotation
-            print("Failed to set wallpaper: \(error.localizedDescription)")
+            print("ERROR: Failed to set wallpaper: \(error.localizedDescription)")
+            if let wallpaperError = error as? WallpaperError {
+                print("WallpaperError details: \(wallpaperError)")
+            }
         }
     }
     

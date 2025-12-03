@@ -40,20 +40,21 @@ open PhotoWall.xcodeproj
 ### Manager Layer (Core Business Logic)
 The app follows a manager-based architecture where managers are instantiated once at app launch and injected into views:
 
-- **AuthManager**: Handles OAuth 2.0 flow with Google using PKCE. Stores credentials in Keychain via KeychainService. Automatically checks existing auth on launch and refreshes expired tokens.
-- **PhotosManager**: Interfaces with Google Photos Library API. Fetches albums and photos with pagination. Handles token refresh through AuthManager. Uses ImageCacheService for full-resolution downloads.
+- **AuthManager**: Handles OAuth 2.0 flow with Google using PKCE. Stores credentials in Keychain via KeychainService. Automatically checks existing auth on launch and refreshes expired tokens. Includes automatic migration from deprecated `photoslibrary.readonly` scope to `photospicker.mediaitems.readonly`.
+- **PhotosManager**: Interfaces with Google Photos Picker API via PhotosPickerService. Creates picker sessions and fetches selected media items. Uses ImageCacheService for full-resolution downloads. No longer directly fetches albums or photos - user selection is required via picker.
 - **WallpaperManager**: Controls wallpaper rotation lifecycle (start/pause/resume/stop). Maintains RotationState (photos queue, current index, interval). Applies wallpapers to all connected displays via NSWorkspace. Monitors display connection changes and reapplies wallpaper to newly connected displays.
-- **SettingsManager**: Persists user preferences to UserDefaults (rotation interval, selected albums/photos, pause state). Provides convenience methods for photo/album selection.
+- **SettingsManager**: Persists user preferences to UserDefaults (rotation interval, picker cache, selected photos, pause state). Caches full Photo objects from picker selections with 7-day staleness threshold. Provides methods for caching and retrieving selected photos.
 
 ### Service Layer (Infrastructure)
 - **KeychainService**: Secure storage for OAuth credentials using Security framework
+- **PhotosPickerService**: Handles Google Photos Picker API communication. Creates picker sessions and fetches media items from completed selections. Supports pagination and converts picker responses to Photo models.
 - **ImageCacheService**: Caches full-resolution images in Application Support directory. Generates cache file paths using sanitized photo IDs. Provides cache size calculation and clearing functionality.
 
 ### App Lifecycle
 The AppDelegate pattern is used (not Scene-based):
 1. `PhotoWallApp` registers an `AppDelegate` via `@NSApplicationDelegateAdaptor`
 2. In `applicationDidFinishLaunching`, the AppDelegate:
-   - Instantiates all managers (AuthManager → PhotosManager → WallpaperManager)
+   - Instantiates all managers (AuthManager → PhotosPickerService → PhotosManager → WallpaperManager)
    - Creates status bar item with menu bar icon
    - Sets up NSPopover with ContentView (injecting all managers)
    - Monitors display connection changes via NSApplication.didChangeScreenParametersNotification
@@ -65,9 +66,10 @@ The AppDelegate pattern is used (not Scene-based):
 ContentView (routes on auth state)
 ├─ SignInView (authState == .signedOut)
 └─ MainView (authState == .signedIn)
-   ├─ AlbumsView (select albums)
-   ├─ PhotosView (view album photos, select individual photos)
-   └─ SettingsView (configure rotation interval, control rotation)
+   ├─ AlbumsView (launch picker, view selection status)
+   │  └─ PickerSheetView (modal picker flow)
+   │     └─ PickerWebView (embeds Google's picker UI)
+   └─ SettingsView (configure rotation interval, control rotation, view picker cache info)
 ```
 
 ### OAuth Configuration
@@ -79,9 +81,11 @@ GOOGLE_CLIENT_ID=59012961394-f95l5hk5up0e4hlma90hk2gjii3suvi2.apps.googleusercon
 OAuth flow uses:
 - Authorization endpoint: `https://accounts.google.com/o/oauth2/v2/auth`
 - Token endpoint: `https://oauth2.googleapis.com/token`
-- Scopes: `photoslibrary.readonly`, `openid`, `email`, `profile`
+- Scopes: `photospicker.mediaitems.readonly`, `openid`, `email`, `profile`
 - PKCE for secure authorization
 - Custom URL scheme: `com.photowall.app:/oauth2callback`
+
+**Note**: The app uses the Google Photos Picker API (not the deprecated Library API). The `photoslibrary.readonly` scope was removed on March 31, 2025.
 
 ### Testing Strategy
 The test suite uses property-based testing with SwiftCheck library:
@@ -95,11 +99,18 @@ The test suite uses property-based testing with SwiftCheck library:
   - SettingsPropertyTests: UserDefaults persistence
 
 ### Data Models (Models.swift)
-- **Album**: Google Photos album metadata (id, title, cover photo, item count)
+- **Album**: Google Photos album metadata (id, title, cover photo, item count) - *Note: No longer fetched directly, preserved for compatibility*
 - **Photo**: Photo metadata with baseUrl property used to construct download URLs (`baseUrl + "=w200-h200-c"` for thumbnails, `baseUrl + "=d"` for full resolution)
+- **PickerCache**: Stores cached photos from picker selections with selectionDate. Has `isStale` computed property (7-day threshold).
 - **OAuthCredentials**: Access token, refresh token, expiration date
 - **RotationState**: Maintains rotation queue, current index, and provides `advanceToNext()` for circular iteration
 - **AuthState**: Enum with .unknown (checking), .signedOut, .signedIn(UserInfo)
+
+### Picker API Models (PickerModels.swift)
+- **PickerSessionRequest/Response**: Models for creating picker sessions
+- **PickerMediaItemsResponse**: Response from fetching media items from a picker session
+- **PickerMediaItem**: Individual media item with conversion to Photo model via `toPhoto()`
+- **PickerError**: Typed errors for picker operations
 
 ### Key Implementation Details
 
@@ -107,7 +118,23 @@ The test suite uses property-based testing with SwiftCheck library:
 
 **Image Caching Strategy**: PhotosManager downloads photos on-demand. Full-resolution images are cached by ImageCacheService in `~/Library/Application Support/PhotoWall/ImageCache/`. Cache keys are photo IDs with "/" replaced by "_". Wallpapers are set from cached file URLs, not in-memory data.
 
-**Error Handling**: Managers use typed error enums (AuthError, PhotosError, WallpaperError, KeychainError, ImageCacheError) with LocalizedError conformance. Network requests in PhotosManager include retry logic (max 3 retries with exponential backoff).
+**Picker API Architecture**: The app uses Google Photos Picker API instead of the deprecated Library API. User flow:
+1. User clicks "Select Photos" in AlbumsView
+2. PhotosPickerService creates a picker session via `POST /v1/sessions`
+3. PickerWebView (WKWebView) loads Google's picker UI from session.pickerUri
+4. User selects photos in Google's UI
+5. On completion, app fetches selected media items via `GET /v1/{mediaItemsSetId}/mediaItems`
+6. Photos are cached in SettingsManager.pickerCache (includes full Photo objects)
+7. Cached photos are used for rotation without re-prompting user
+8. Cache is valid for 7 days, after which staleness warning is shown
+
+**Picker Cache Strategy**: Full Photo objects (including baseUrl) are cached in UserDefaults as JSON. This is necessary because:
+- Picker requires user interaction (can't auto-refresh programmatically)
+- BaseUrl URLs remain valid for extended periods
+- Enables wallpaper rotation without repeated picker prompts
+- When cache becomes stale (7+ days), user is prompted to re-select
+
+**Error Handling**: Managers use typed error enums (AuthError, PhotosError, PickerError, WallpaperError, KeychainError, ImageCacheError) with LocalizedError conformance. Network requests in PhotosManager and PhotosPickerService include retry logic (max 3 retries with exponential backoff).
 
 **State Persistence**: On app quit, AppDelegate.saveCurrentState() persists pause state via SettingsManager. WallpaperManager.stopRotation() is called to clean up timers. UserDefaults.standard.synchronize() ensures persistence.
 
@@ -155,3 +182,39 @@ PhotoWallTests/
 ├── PropertyTests/     # Property-based tests
 └── TestGenerators.swift # Arbitrary implementations for models
 ```
+
+## Google Cloud Console Setup
+
+Before running the app, ensure your Google Cloud Console project is configured correctly:
+
+### Required OAuth Scope
+
+The OAuth consent screen must include:
+```
+https://www.googleapis.com/auth/photospicker.mediaitems.readonly
+```
+
+**Important**: The old `photoslibrary.readonly` scope was deprecated and removed on March 31, 2025. If your project still has this scope, remove it and add the picker scope instead.
+
+### Setup Steps
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Navigate to: APIs & Services → OAuth consent screen
+3. Click "Edit App"
+4. In the "Scopes" section:
+   - Remove `photoslibrary.readonly` if present
+   - Add `photospicker.mediaitems.readonly`
+   - Keep `openid`, `email`, and `profile`
+5. Save changes
+
+**Note**: Scope changes may take several hours to propagate. Test users may need to be re-authorized after the change.
+
+### Automatic Migration
+
+The app includes automatic migration logic in AuthManager that:
+- Detects old credentials with deprecated scope on first launch
+- Clears them from Keychain
+- Forces user to re-authenticate with new scope
+- Sets a UserDefaults flag to prevent re-migration
+
+This ensures a smooth transition for existing users.
