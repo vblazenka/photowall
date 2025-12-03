@@ -23,7 +23,6 @@ struct MainView: View {
     @ObservedObject var photosManager: PhotosManager
     
     @State private var selectedTab: MainTab = .albums
-    @State private var selectedAlbum: Album? = nil
     @State private var isStartingRotation = false
     
     var body: some View {
@@ -115,35 +114,16 @@ struct MainView: View {
     
     // MARK: - Content View
     
-    @ViewBuilder
     private var contentView: some View {
-        if let album = selectedAlbum {
-            PhotosView(
-                album: album,
-                photosManager: photosManager,
-                settingsManager: settingsManager,
-                onBack: { 
-                    withAnimation(Theme.Animation.standard) {
-                        selectedAlbum = nil
-                    }
-                }
-            )
-            .transition(.asymmetric(
-                insertion: .move(edge: .trailing).combined(with: .opacity),
-                removal: .move(edge: .trailing).combined(with: .opacity)
-            ))
-        } else {
-            VStack(spacing: 0) {
-                // Tab bar
-                tabBar
-                
-                Divider()
-                    .foregroundColor(Theme.separator)
-                
-                // Tab content
-                tabContent
-            }
-            .transition(.opacity)
+        VStack(spacing: 0) {
+            // Tab bar
+            tabBar
+
+            Divider()
+                .foregroundColor(Theme.separator)
+
+            // Tab content
+            tabContent
         }
     }
     
@@ -186,12 +166,7 @@ struct MainView: View {
         case .albums:
             AlbumsView(
                 photosManager: photosManager,
-                settingsManager: settingsManager,
-                onAlbumSelected: { album in
-                    withAnimation(Theme.Animation.standard) {
-                        selectedAlbum = album
-                    }
-                }
+                settingsManager: settingsManager
             )
             .transition(.opacity)
         case .settings:
@@ -316,44 +291,20 @@ struct MainView: View {
     }
     
     private func fetchAndStartRotation() async {
-        // Get selected photo IDs from settings
-        let selectedPhotoIds = Set(settingsManager.selectedPhotoIds)
-        
-        guard !selectedPhotoIds.isEmpty else { return }
-        
-        // Fetch photos from all selected albums to get the Photo objects
-        var allPhotos: [Photo] = []
-        var seenPhotoIds = Set<String>()
-        
-        do {
-            // Fetch albums first
-            let albums = try await photosManager.fetchAlbums()
-            
-            // For each selected album, fetch its photos
-            for albumId in settingsManager.selectedAlbumIds {
-                if let album = albums.first(where: { $0.id == albumId }) {
-                    let photos = try await photosManager.fetchPhotos(albumId: album.id)
-                    // Filter to only include selected photos, avoiding duplicates
-                    for photo in photos {
-                        if selectedPhotoIds.contains(photo.id) && !seenPhotoIds.contains(photo.id) {
-                            allPhotos.append(photo)
-                            seenPhotoIds.insert(photo.id)
-                        }
-                    }
-                }
+        // Load photos from picker cache
+        guard let photos = settingsManager.getCachedPhotos(), !photos.isEmpty else {
+            await MainActor.run {
+                // TODO: Show alert prompting user to select photos via Albums tab
+                print("No photos selected. Please select photos via the Albums tab.")
             }
-            
-            // If we have photos, start rotation
-            if !allPhotos.isEmpty {
-                await MainActor.run {
-                    wallpaperManager.startRotation(
-                        photos: allPhotos,
-                        interval: settingsManager.rotationInterval
-                    )
-                }
-            }
-        } catch {
-            print("Failed to fetch photos for rotation: \(error.localizedDescription)")
+            return
+        }
+
+        await MainActor.run {
+            wallpaperManager.startRotation(
+                photos: photos,
+                interval: settingsManager.rotationInterval
+            )
         }
     }
     

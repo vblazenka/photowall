@@ -36,6 +36,17 @@ struct MediaMetadata: Codable, Equatable {
     let creationTime: String?
 }
 
+// MARK: - PickerCache
+
+struct PickerCache: Codable, Equatable {
+    let photos: [Photo]
+    let selectionDate: Date
+
+    var isStale: Bool {
+        Date().timeIntervalSince(selectionDate) > 604800 // 7 days
+    }
+}
+
 // MARK: - OAuthCredentials
 
 struct OAuthCredentials: Codable, Equatable {

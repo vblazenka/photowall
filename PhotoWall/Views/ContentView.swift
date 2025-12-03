@@ -62,11 +62,15 @@ struct ContentView: View {
 }
 
 #Preview("Signed Out") {
-    ContentView(
-        authManager: AuthManager(),
+    let authManager = AuthManager()
+    let pickerService = PhotosPickerService(authManager: authManager)
+    let photosManager = PhotosManager(authManager: authManager, pickerService: pickerService)
+
+    return ContentView(
+        authManager: authManager,
         settingsManager: SettingsManager(),
-        photosManager: PhotosManager(authManager: AuthManager()),
-        wallpaperManager: WallpaperManager(photosManager: PhotosManager(authManager: AuthManager()))
+        photosManager: photosManager,
+        wallpaperManager: WallpaperManager(photosManager: photosManager)
     )
     .frame(width: 320, height: 480)
 }

@@ -68,7 +68,7 @@ struct OAuthConfiguration {
             tokenEndpoint: "https://oauth2.googleapis.com/token",
             revokeEndpoint: "https://oauth2.googleapis.com/revoke",
             scopes: [
-                "https://www.googleapis.com/auth/photoslibrary.readonly",
+                "https://www.googleapis.com/auth/photospicker.mediaitems.readonly",
                 "openid",
                 "email",
                 "profile"
@@ -139,8 +139,13 @@ final class AuthManager: NSObject, AuthManagerProtocol, ASWebAuthenticationPrese
     }
     
     // MARK: - Check Existing Auth
-    
+
     private func checkExistingAuth() async {
+        // Check if we need to migrate from old scope
+        if needsScopeMigration() {
+            performScopeMigration()
+        }
+
         do {
             if let credentials = try keychainService.load() {
                 if credentials.isExpired {
@@ -157,6 +162,25 @@ final class AuthManager: NSObject, AuthManagerProtocol, ASWebAuthenticationPrese
         } catch {
             authState = .signedOut
         }
+    }
+
+    // MARK: - Scope Migration
+
+    private func needsScopeMigration() -> Bool {
+        // Check if we've already migrated
+        let migrationKey = "hasCompletedPickerScopeMigration"
+        return !UserDefaults.standard.bool(forKey: migrationKey)
+    }
+
+    private func performScopeMigration() {
+        // Clear old credentials that used deprecated photoslibrary.readonly scope
+        try? keychainService.delete()
+
+        // Mark migration as complete
+        let migrationKey = "hasCompletedPickerScopeMigration"
+        UserDefaults.standard.set(true, forKey: migrationKey)
+
+        print("OAuth scope migration completed: Old credentials cleared, user will need to re-authenticate")
     }
     
     // MARK: - Sign In

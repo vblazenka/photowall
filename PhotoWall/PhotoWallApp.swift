@@ -36,7 +36,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func setupManagers() {
         authManager = AuthManager()
         settingsManager = SettingsManager()
-        photosManager = PhotosManager(authManager: authManager!)
+
+        // Create picker service for new Photos Picker API
+        let pickerService = PhotosPickerService(authManager: authManager!)
+
+        photosManager = PhotosManager(authManager: authManager!, pickerService: pickerService)
         wallpaperManager = WallpaperManager(photosManager: photosManager!)
     }
     
