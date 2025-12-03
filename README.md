@@ -16,57 +16,10 @@ A macOS menu bar application that automatically rotates your desktop wallpaper u
 
 - macOS 13.0 (Ventura) or later
 - Google account with access to Google Photos
-- Xcode 14.0+ (for building from source)
 
-## Setup
+## Download
 
-### Google Cloud Console Configuration
-
-Before running the app, you need to set up OAuth credentials:
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select an existing one
-3. Navigate to **APIs & Services → OAuth consent screen**
-   - Configure your consent screen
-   - Add the following scopes:
-     - `https://www.googleapis.com/auth/photospicker.mediaitems.readonly`
-     - `openid`
-     - `email`
-     - `profile`
-4. Navigate to **APIs & Services → Credentials**
-   - Click **Create Credentials → OAuth 2.0 Client ID**
-   - Application type: **iOS** or **macOS**
-   - Add custom URL scheme: `com.photowall.app`
-5. Copy your Client ID
-
-### Building the App
-
-1. Clone this repository:
-```bash
-git clone <repository-url>
-cd PhotoWall
-```
-
-2. Open the project in Xcode:
-```bash
-open PhotoWall.xcodeproj
-```
-
-3. Configure your Google Client ID:
-   - In Xcode, go to **Product → Scheme → Edit Scheme**
-   - Select **Run** → **Arguments** tab
-   - Add environment variable:
-     - Name: `GOOGLE_CLIENT_ID`
-     - Value: `<your-client-id>.apps.googleusercontent.com`
-
-4. Build and run:
-```bash
-# Debug build
-xcodebuild -scheme PhotoWall -configuration Debug build
-
-# Or run directly from Xcode
-# Press Cmd+R
-```
+Available on the Mac App Store: [Link coming soon]
 
 ## Usage
 
@@ -149,11 +102,13 @@ The app uses the Google Photos Picker API (not the deprecated Library API) for p
 
 ## License
 
-[Add your license here]
+Copyright © 2025. All rights reserved.
 
-## Contributing
+PhotoWall is proprietary software available for purchase on the Mac App Store. See LICENSE file for details.
 
-Contributions are welcome! Please feel free to submit issues or pull requests.
+## Support
+
+For bug reports, feature requests, or support inquiries, please contact: contact@vedran.co
 
 ## Acknowledgments
 
